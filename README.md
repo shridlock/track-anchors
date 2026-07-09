@@ -8,8 +8,18 @@ Daily SHA-256 anchors of a private, salted, Merkle-chained multi-venue trading t
 
 Each head hash commits — via per-day Merkle links — to the full private history:
 per-venue equity, external flows, and positions, all salted. Nothing is disclosed here.
-Selective disclosure (e.g. an equity series with flows, without ever revealing positions)
-can be proven against these anchors at any time.
+
+Disclosure granularity depends on the day's Merkle schema:
+
+- **v3-split schema (from 2026-07-09):** each venue leaf splits into a public
+  sub-leaf (equity, external flows, position count, instrument categories) and a
+  private sub-leaf (positions), committed as `H(H(pub) || H(priv))`. Selective
+  disclosure — an equity-with-flows series that never reveals positions — is
+  provable against these anchors.
+- **v2 schema (2026-06-11 .. 2026-07-08):** each venue leaf hashes equity, flows
+  and positions together under a single preimage. These days are provable only
+  **venue-whole**: proving a venue's equity necessarily reveals that venue's
+  positions. Equity-without-positions is NOT selectively provable for the v2 era.
 
 Verify a day's proof:
 
